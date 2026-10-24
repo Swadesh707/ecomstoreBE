@@ -21,7 +21,6 @@ export const getAllProducts = async (req, res) => {
   }
 }
 
-
 export const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id)
@@ -35,22 +34,26 @@ export const getProductById = async (req, res) => {
   }
 }
 
-
 export const createProduct = async (req, res) => {
   try {
-    const { title, price, description, category, image, stock } = req.body
+    const { title, price, description, category, image, images, stock } = req.body
 
     if (!title || price === undefined) {
       return res.status(400).json({ message: "Title and price are required" })
     }
 
+    const productImages = Array.isArray(images) && images.length > 0
+      ? images
+      : (image ? [image] : [])
+
     const newProduct = await Product.create({
       title,
       price: Number(price),
-      description: description ,
-      category: category ,
-      image: image ,
-      stock: stock ,
+      description: description,
+      category: category,
+      image: image || productImages[0] || "",
+      images: productImages,
+      stock: stock,
     })
 
     res.status(201).json(newProduct)
@@ -60,10 +63,9 @@ export const createProduct = async (req, res) => {
   }
 }
 
-
 export const updateProduct = async (req, res) => {
   try {
-    const { title, price, description, category, image, stock } = req.body
+    const { title, price, description, category, image, images, stock } = req.body
 
     const updateData = {}
     if (title !== undefined) updateData.title = title
@@ -71,6 +73,7 @@ export const updateProduct = async (req, res) => {
     if (description !== undefined) updateData.description = description
     if (category !== undefined) updateData.category = category
     if (image !== undefined) updateData.image = image
+    if (images !== undefined) updateData.images = images
     if (stock !== undefined) updateData.stock = Number(stock)
 
     const updated = await Product.findByIdAndUpdate(
@@ -90,7 +93,6 @@ export const updateProduct = async (req, res) => {
   }
 }
 
-
 export const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id)
@@ -103,4 +105,3 @@ export const deleteProduct = async (req, res) => {
     res.status(500).json({ message: "Failed to delete product" })
   }
 }
-

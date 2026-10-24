@@ -60,7 +60,7 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
 })
 
-// Device image upload endpoint
+// Device image upload endpoint (single and multiple)
 app.post("/upload", upload.single("image"), (req, res) => {
   try {
     if (!req.file) {
@@ -71,6 +71,21 @@ app.post("/upload", upload.single("image"), (req, res) => {
   } catch (err) {
     console.error("Upload error:", err)
     res.status(500).json({ message: "Failed to upload image from device" })
+  }
+})
+
+app.post("/upload-multiple", upload.array("images", 5), (req, res) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ message: "No image files provided" })
+    }
+    const urls = req.files.map(
+      (f) => `${req.protocol}://${req.get("host")}/uploads/${f.filename}`
+    )
+    res.json({ urls })
+  } catch (err) {
+    console.error("Multiple upload error:", err)
+    res.status(500).json({ message: "Failed to upload images from device" })
   }
 })
 
@@ -94,6 +109,11 @@ connectDB().then(async () => {
           price: 850.00,
           category: "Tailoring & Outerwear",
           image: "https://images.unsplash.com/photo-1544441893-675973e31985?w=800&auto=format&fit=crop&q=80",
+          images: [
+            "https://images.unsplash.com/photo-1544441893-675973e31985?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1516257984-b1b4d707412e?w=800&auto=format&fit=crop&q=80"
+          ],
           stock: 12,
         },
         {
@@ -102,6 +122,11 @@ connectDB().then(async () => {
           price: 590.00,
           category: "Tailoring & Outerwear",
           image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop&q=80",
+          images: [
+            "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?w=800&auto=format&fit=crop&q=80"
+          ],
           stock: 16,
         },
         {
@@ -110,6 +135,11 @@ connectDB().then(async () => {
           price: 680.00,
           category: "Tailoring & Outerwear",
           image: "https://images.unsplash.com/photo-1551028719-01c1eb562251?w=800&auto=format&fit=crop&q=80",
+          images: [
+            "https://images.unsplash.com/photo-1551028719-01c1eb562251?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1544441893-675973e31985?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1520975954732-35dd22299614?w=800&auto=format&fit=crop&q=80"
+          ],
           stock: 15,
         },
         {
@@ -118,6 +148,11 @@ connectDB().then(async () => {
           price: 240.00,
           category: "Tailoring & Outerwear",
           image: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=800&auto=format&fit=crop&q=80",
+          images: [
+            "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=800&auto=format&fit=crop&q=80"
+          ],
           stock: 25,
         },
 
@@ -128,6 +163,11 @@ connectDB().then(async () => {
           price: 320.00,
           category: "Knitwear & Shirts",
           image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&auto=format&fit=crop&q=80",
+          images: [
+            "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80"
+          ],
           stock: 28,
         },
         {
@@ -136,6 +176,11 @@ connectDB().then(async () => {
           price: 280.00,
           category: "Knitwear & Shirts",
           image: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80",
+          images: [
+            "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=800&auto=format&fit=crop&q=80"
+          ],
           stock: 22,
         },
         {
@@ -144,6 +189,11 @@ connectDB().then(async () => {
           price: 185.00,
           category: "Knitwear & Shirts",
           image: "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=800&auto=format&fit=crop&q=80",
+          images: [
+            "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80"
+          ],
           stock: 45,
         },
         {
@@ -152,6 +202,11 @@ connectDB().then(async () => {
           price: 165.00,
           category: "Knitwear & Shirts",
           image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80",
+          images: [
+            "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&auto=format&fit=crop&q=80"
+          ],
           stock: 35,
         },
 
@@ -162,6 +217,11 @@ connectDB().then(async () => {
           price: 420.00,
           category: "Leather Shoes",
           image: "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=800&auto=format&fit=crop&q=80",
+          images: [
+            "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1582897103445-56545163b49c?w=800&auto=format&fit=crop&q=80"
+          ],
           stock: 20,
         },
         {
@@ -170,6 +230,11 @@ connectDB().then(async () => {
           price: 460.00,
           category: "Leather Shoes",
           image: "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&auto=format&fit=crop&q=80",
+          images: [
+            "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=800&auto=format&fit=crop&q=80"
+          ],
           stock: 18,
         },
         {
@@ -178,6 +243,11 @@ connectDB().then(async () => {
           price: 395.00,
           category: "Leather Shoes",
           image: "https://images.unsplash.com/photo-1582897103445-56545163b49c?w=800&auto=format&fit=crop&q=80",
+          images: [
+            "https://images.unsplash.com/photo-1582897103445-56545163b49c?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&auto=format&fit=crop&q=80"
+          ],
           stock: 15,
         },
         {
@@ -186,6 +256,11 @@ connectDB().then(async () => {
           price: 440.00,
           category: "Leather Shoes",
           image: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=800&auto=format&fit=crop&q=80",
+          images: [
+            "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1582897103445-56545163b49c?w=800&auto=format&fit=crop&q=80"
+          ],
           stock: 14,
         },
 
@@ -196,6 +271,11 @@ connectDB().then(async () => {
           price: 135.00,
           category: "Belts & Leather Goods",
           image: "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=800&auto=format&fit=crop&q=80",
+          images: [
+            "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&auto=format&fit=crop&q=80"
+          ],
           stock: 50,
         },
         {
@@ -204,6 +284,11 @@ connectDB().then(async () => {
           price: 145.00,
           category: "Belts & Leather Goods",
           image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80",
+          images: [
+            "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&auto=format&fit=crop&q=80"
+          ],
           stock: 35,
         },
         {
@@ -212,6 +297,11 @@ connectDB().then(async () => {
           price: 95.00,
           category: "Belts & Leather Goods",
           image: "https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&auto=format&fit=crop&q=80",
+          images: [
+            "https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80"
+          ],
           stock: 60,
         },
 
@@ -222,6 +312,11 @@ connectDB().then(async () => {
           price: 1250.00,
           category: "Fine Accessories",
           image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&auto=format&fit=crop&q=80",
+          images: [
+            "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=80"
+          ],
           stock: 8,
         },
         {
@@ -230,6 +325,11 @@ connectDB().then(async () => {
           price: 85.00,
           category: "Fine Accessories",
           image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=80",
+          images: [
+            "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&auto=format&fit=crop&q=80"
+          ],
           stock: 40,
         },
         {
@@ -238,6 +338,11 @@ connectDB().then(async () => {
           price: 290.00,
           category: "Fine Accessories",
           image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&auto=format&fit=crop&q=80",
+          images: [
+            "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=80"
+          ],
           stock: 30,
         },
         {
@@ -246,6 +351,11 @@ connectDB().then(async () => {
           price: 195.00,
           category: "Fine Accessories",
           image: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&auto=format&fit=crop&q=80",
+          images: [
+            "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&auto=format&fit=crop&q=80"
+          ],
           stock: 25,
         },
       ])
