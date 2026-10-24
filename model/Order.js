@@ -16,6 +16,10 @@ const orderSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    soldBy: {
+      type: String,
+      default: "",
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

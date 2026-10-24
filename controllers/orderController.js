@@ -148,6 +148,7 @@ export const createOrder = async (req, res) => {
       orderNumber,
       trackingNumber,
       invoiceNumber,
+      soldBy: req.body.soldBy || (req.user?.name || ""),
       user: assignedUserId,
       customer: {
         name: customer.name.trim(),
@@ -245,6 +246,130 @@ export const createOrder = async (req, res) => {
     console.error("Order creation error:", err)
     return res.status(500).json({
       message: err.message || "Failed to record commission order.",
+      error: err.toString(),
+    })
+  }
+}
+
+export const createInStoreBill = async (req, res) => {
+  try {
+    const {
+      soldBy,
+      customerName,
+      customerEmail,
+      items,
+      productId,
+      itemTitle,
+      unitPrice,
+      quantity = 1,
+      paymentMethod = "card",
+      discountPercentage = 0,
+      discountAmount = 0,
+    } = req.body
+
+    const activeSoldBy = soldBy || req.user?.name || "Salesperson"
+    const custName = customerName?.trim() || "In-Store Client"
+    const custEmail = customerEmail?.trim() || "client@instore.ecomstore.com"
+
+    let processedItems = []
+    let subtotal = 0
+
+    if (Array.isArray(items) && items.length > 0) {
+      processedItems = items.map((it) => ({
+        productId: it.productId || null,
+        title: it.title || "Tailored Item",
+        price: Number(it.price) || 0,
+        quantity: Number(it.quantity) || 1,
+        size: it.size || "Standard",
+        color: it.color || "Classic",
+        image: it.image || "",
+      }))
+      subtotal = processedItems.reduce((acc, it) => acc + it.price * it.quantity, 0)
+    } else {
+      const price = Number(unitPrice) || 0
+      const qty = Number(quantity) || 1
+      subtotal = price * qty
+
+      let itemImage = ""
+      if (productId && mongoose.Types.ObjectId.isValid(productId)) {
+        const prod = await Product.findById(productId)
+        if (prod) {
+          itemImage = prod.image || (prod.images && prod.images[0]) || ""
+        }
+      }
+
+      processedItems.push({
+        productId: (productId && mongoose.Types.ObjectId.isValid(productId)) ? productId : null,
+        title: itemTitle || "Tailored Item",
+        price,
+        quantity: qty,
+        size: "Standard",
+        color: "Classic",
+        image: itemImage,
+      })
+    }
+
+    const discountPercent = Math.max(0, Math.min(100, Number(discountPercentage) || 0))
+    const calculatedDiscount = discountPercent > 0
+      ? (subtotal * discountPercent) / 100
+      : Number(discountAmount) || 0
+    const totalAmount = Math.max(0, subtotal - calculatedDiscount)
+
+    const timestampPart = Date.now().toString().slice(-4)
+    const randomPart = Math.floor(1000 + Math.random() * 9000)
+    const orderNumber = `BILL-${new Date().getFullYear()}-${timestampPart}${randomPart}`
+    const invoiceNumber = `INV-${new Date().getFullYear()}-${timestampPart}${randomPart}`
+
+    const newBill = await Order.create({
+      orderNumber,
+      invoiceNumber,
+      trackingNumber: "",
+      soldBy: activeSoldBy,
+      customer: {
+        name: custName,
+        email: custEmail,
+        phone: "",
+        address: "In-Store Purchase",
+        city: "Atelier Boutique",
+        zip: "10001",
+      },
+      items: processedItems,
+      subtotal,
+      discountAmount: calculatedDiscount,
+      shippingFee: 0,
+      totalAmount,
+      paymentMethod: paymentMethod === "cod" ? "cod" : "card",
+      paymentStatus: "Paid",
+      orderStatus: "Delivered",
+      carrier: "In-Store Handover",
+      estimatedDeliveryDate: new Date(),
+    })
+
+    // Decrement stock for inventory items sold
+    for (const item of processedItems) {
+      try {
+        let prod = null
+        if (item.productId && mongoose.Types.ObjectId.isValid(item.productId)) {
+          prod = await Product.findById(item.productId)
+        }
+        if (!prod && item.title) {
+          prod = await Product.findOne({ title: item.title })
+        }
+        if (prod) {
+          const currentStock = typeof prod.stock === "number" ? prod.stock : 10
+          prod.stock = Math.max(0, currentStock - item.quantity)
+          await prod.save()
+        }
+      } catch (stockErr) {
+        console.error("Stock deduction error for in-store bill:", stockErr)
+      }
+    }
+
+    return res.status(201).json(newBill)
+  } catch (err) {
+    console.error("In-store bill generation error:", err)
+    return res.status(500).json({
+      message: "Failed to record in-store bill in database.",
       error: err.toString(),
     })
   }
@@ -564,5 +689,162 @@ export const getAnalyticsSummary = async (req, res) => {
   } catch (err) {
     console.error("Error generating analytics:", err)
     res.status(500).json({ message: "Failed to generate analytics data." })
+  }
+}
+
+export const updateInStoreBill = async (req, res) => {
+  try {
+    const { id } = req.params
+    const order = await Order.findById(id)
+    if (!order) {
+      return res.status(404).json({ message: "Bill not found" })
+    }
+
+    const {
+      customerName,
+      customerEmail,
+      items,
+      productId,
+      itemTitle,
+      unitPrice,
+      quantity = 1,
+      paymentMethod,
+      discountPercentage = 0,
+      discountAmount = 0,
+    } = req.body
+
+    // 1. Restore previous stock for items in this bill
+    for (const oldItem of order.items) {
+      try {
+        let prod = null
+        if (oldItem.productId && mongoose.Types.ObjectId.isValid(oldItem.productId)) {
+          prod = await Product.findById(oldItem.productId)
+        }
+        if (!prod && oldItem.title) {
+          prod = await Product.findOne({ title: oldItem.title })
+        }
+        if (prod) {
+          prod.stock = (Number(prod.stock) || 0) + (Number(oldItem.quantity) || 1)
+          await prod.save()
+        }
+      } catch (err) {
+        console.error("Error restoring old stock on bill edit:", err)
+      }
+    }
+
+    // 2. Prepare new processed items
+    let processedItems = []
+    let subtotal = 0
+
+    if (Array.isArray(items) && items.length > 0) {
+      processedItems = items.map((it) => ({
+        productId: it.productId || null,
+        title: it.title || "Tailored Item",
+        price: Number(it.price) || 0,
+        quantity: Number(it.quantity) || 1,
+        size: it.size || "Standard",
+        color: it.color || "Classic",
+        image: it.image || "",
+      }))
+      subtotal = processedItems.reduce((acc, it) => acc + it.price * it.quantity, 0)
+    } else {
+      const price = Number(unitPrice) || 0
+      const qty = Number(quantity) || 1
+      subtotal = price * qty
+
+      let itemImage = ""
+      if (productId && mongoose.Types.ObjectId.isValid(productId)) {
+        const prod = await Product.findById(productId)
+        if (prod) {
+          itemImage = prod.image || (prod.images && prod.images[0]) || ""
+        }
+      }
+
+      processedItems.push({
+        productId: (productId && mongoose.Types.ObjectId.isValid(productId)) ? productId : null,
+        title: itemTitle || "Tailored Item",
+        price,
+        quantity: qty,
+        size: "Standard",
+        color: "Classic",
+        image: itemImage,
+      })
+    }
+
+    const discountPercent = Math.max(0, Math.min(100, Number(discountPercentage) || 0))
+    const calculatedDiscount = discountPercent > 0
+      ? (subtotal * discountPercent) / 100
+      : Number(discountAmount) || 0
+    const totalAmount = Math.max(0, subtotal - calculatedDiscount)
+
+    // 3. Decrement new stock
+    for (const newItem of processedItems) {
+      try {
+        let prod = null
+        if (newItem.productId && mongoose.Types.ObjectId.isValid(newItem.productId)) {
+          prod = await Product.findById(newItem.productId)
+        }
+        if (!prod && newItem.title) {
+          prod = await Product.findOne({ title: newItem.title })
+        }
+        if (prod) {
+          const curStock = typeof prod.stock === "number" ? prod.stock : 10
+          prod.stock = Math.max(0, curStock - newItem.quantity)
+          await prod.save()
+        }
+      } catch (stockErr) {
+        console.error("Error decrementing new stock on bill edit:", stockErr)
+      }
+    }
+
+    // 4. Update order fields
+    if (customerName) order.customer.name = customerName.trim()
+    if (customerEmail) order.customer.email = customerEmail.trim()
+    order.items = processedItems
+    order.subtotal = subtotal
+    order.discountAmount = calculatedDiscount
+    order.totalAmount = totalAmount
+    if (paymentMethod) order.paymentMethod = paymentMethod === "cod" ? "cod" : "card"
+
+    await order.save()
+    return res.json(order)
+  } catch (err) {
+    console.error("Error updating bill:", err)
+    return res.status(500).json({ message: "Failed to update bill." })
+  }
+}
+
+export const deleteInStoreBill = async (req, res) => {
+  try {
+    const { id } = req.params
+    const order = await Order.findById(id)
+    if (!order) {
+      return res.status(404).json({ message: "Bill not found" })
+    }
+
+    // Restore stock for all items
+    for (const item of order.items) {
+      try {
+        let prod = null
+        if (item.productId && mongoose.Types.ObjectId.isValid(item.productId)) {
+          prod = await Product.findById(item.productId)
+        }
+        if (!prod && item.title) {
+          prod = await Product.findOne({ title: item.title })
+        }
+        if (prod) {
+          prod.stock = (Number(prod.stock) || 0) + (Number(item.quantity) || 1)
+          await prod.save()
+        }
+      } catch (stockErr) {
+        console.error("Stock restore error on bill delete:", stockErr)
+      }
+    }
+
+    await Order.findByIdAndDelete(id)
+    return res.json({ success: true, message: "Bill deleted and stock restored successfully." })
+  } catch (err) {
+    console.error("Error deleting bill:", err)
+    return res.status(500).json({ message: "Failed to delete bill." })
   }
 }

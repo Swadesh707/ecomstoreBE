@@ -425,7 +425,7 @@ export const getAllUsers = async (req, res) => {
     if (totalUsersInDb === 0) {
       const defaultHash = await bcrypt.hash("admin", 10)
       await User.create({
-        fullName: "House Admin",
+        fullName: "admin",
         email: "admin@gmail.com",
         password: defaultHash,
         role: "admin",

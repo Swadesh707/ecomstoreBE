@@ -13,6 +13,7 @@ import couponRoutes from "./routes/couponRoutes.js"
 import paymentRoutes from "./routes/paymentRoutes.js"
 import wishlistRoutes from "./routes/wishlistRoutes.js"
 import userCategoryRoutes from "./routes/userCategoryRoutes.js"
+import collectedMailsRoutes from "./routes/collectedMailsRoutes.js"
 import Product from "./model/Product.js"
 import Category from "./model/Category.js"
 import Coupon from "./model/Coupon.js"
@@ -398,28 +399,28 @@ connectDB().then(async () => {
     // Seed default accounts for each category
     const defaultAccounts = [
       {
-        fullName: "Store Administrator",
+        fullName: "admin",
         email: "admin@ecomstore.com",
         password: "password123",
         role: "admin",
         userCategory: "Admin",
       },
       {
-        fullName: "In-Store Salesperson",
+        fullName: "salesperson",
         email: "sales@ecomstore.com",
         password: "password123",
         role: "salesperson",
         userCategory: "Salesperson",
       },
       {
-        fullName: "Logistics Dispatcher",
+        fullName: "logistics",
         email: "logistics@ecomstore.com",
         password: "password123",
         role: "logistics",
         userCategory: "Logistics",
       },
       {
-        fullName: "Store Patron",
+        fullName: "user",
         email: "user@ecomstore.com",
         password: "password123",
         role: "user",
@@ -474,6 +475,9 @@ app.use("/wishlist", wishlistRoutes)
 app.use("/wishlists", wishlistRoutes)
 app.use("/user-category", userCategoryRoutes)
 app.use("/user-categories", userCategoryRoutes)
+app.use("/collected-mails", collectedMailsRoutes)
+app.use("/collected-emails", collectedMailsRoutes)
+app.use("/newsletter", collectedMailsRoutes)
 
 app.get("/", (req, res) => {
   res.send("E-Commerce Backend API is running...")

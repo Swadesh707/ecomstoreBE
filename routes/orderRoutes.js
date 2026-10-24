@@ -1,6 +1,9 @@
 import express from "express"
 import {
   createOrder,
+  createInStoreBill,
+  updateInStoreBill,
+  deleteInStoreBill,
   getAllOrders,
   getOrderById,
   getOrderByNumber,
@@ -22,9 +25,13 @@ import {
 
 const router = express.Router()
 
-router.post("/", optionalAuth, createOrder)
-router.post("/create", optionalAuth, createOrder)
-router.post("/confirm", optionalAuth, createOrder)
+router.post("/", verifyToken, createOrder)
+router.post("/create", verifyToken, createOrder)
+router.post("/confirm", verifyToken, createOrder)
+router.post("/in-store-bill", verifyToken, requireStaff, createInStoreBill)
+router.put("/in-store-bill/:id", verifyToken, requireStaff, updateInStoreBill)
+router.delete("/in-store-bill/:id", verifyToken, requireStaff, deleteInStoreBill)
+router.delete("/:id", verifyToken, requireStaff, deleteInStoreBill)
 
 router.get("/all", verifyToken, requireStaff, getAllOrders)
 router.get("/analytics/summary", verifyToken, requireAdmin, getAnalyticsSummary)
