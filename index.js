@@ -109,11 +109,11 @@ connectDB().then(async () => {
           description: "Meticulously hand-cut from 100% pure Scottish cashmere. Featuring peak lapels, horn buttons, and a structured sartorial silhouette.",
           price: 850.00,
           category: "Tailoring & Outerwear",
-          image: "https://images.unsplash.com/photo-1544441893-675973e31985?w=800&auto=format&fit=crop&q=80",
+          image: "/uploads/product-1544441893-675973e31985.jpg",
           images: [
-            "https://images.unsplash.com/photo-1544441893-675973e31985?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1516257984-b1b4d707412e?w=800&auto=format&fit=crop&q=80"
+            "/uploads/product-1544441893-675973e31985.jpg",
+            "/uploads/product-1539571696357-5a69c17a67c6.jpg",
+            "/uploads/product-1516257984-b1b4d707412e.jpg"
           ],
           stock: 12,
         },
@@ -122,11 +122,11 @@ connectDB().then(async () => {
           description: "Woven in heritage British mills with pure virgin wool. Unstructured shoulders, patch pockets, and timeless equestrian flair.",
           price: 590.00,
           category: "Tailoring & Outerwear",
-          image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop&q=80",
+          image: "/uploads/product-1507679799987-c73779587ccf.jpg",
           images: [
-            "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?w=800&auto=format&fit=crop&q=80"
+            "/uploads/product-1507679799987-c73779587ccf.jpg",
+            "/uploads/product-1594938298603-c8148c4dae35.jpg",
+            "/uploads/product-1593030761757-71fae45fa0e7.jpg"
           ],
           stock: 16,
         },
@@ -135,11 +135,11 @@ connectDB().then(async () => {
           description: "Water-repellent double-breasted trench in timeless British khaki. Finished with D-ring storm flap and buffalo horn buckles.",
           price: 680.00,
           category: "Tailoring & Outerwear",
-          image: "https://images.unsplash.com/photo-1551028719-01c1eb562251?w=800&auto=format&fit=crop&q=80",
+          image: "/uploads/product-1551028719-01c1eb562251.jpg",
           images: [
-            "https://images.unsplash.com/photo-1551028719-01c1eb562251?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1544441893-675973e31985?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1520975954732-35dd22299614?w=800&auto=format&fit=crop&q=80"
+            "/uploads/product-1551028719-01c1eb562251.jpg",
+            "/uploads/product-1544441893-675973e31985.jpg",
+            "/uploads/product-1520975954732-35dd22299614.jpg"
           ],
           stock: 15,
         },
@@ -148,11 +148,11 @@ connectDB().then(async () => {
           description: "High-waisted tailored trousers with forward double pleats, side adjusters, and a clean drape in charcoal flannel.",
           price: 240.00,
           category: "Tailoring & Outerwear",
-          image: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=800&auto=format&fit=crop&q=80",
+          image: "/uploads/product-1473966968600-fa801b869a1a.jpg",
           images: [
-            "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=800&auto=format&fit=crop&q=80"
+            "/uploads/product-1473966968600-fa801b869a1a.jpg",
+            "/uploads/product-1624378439575-d8705ad7ae80.jpg",
+            "/uploads/product-1506630448388-4e683c67ddb0.jpg"
           ],
           stock: 25,
         },
@@ -163,11 +163,11 @@ connectDB().then(async () => {
           description: "Sumptuously heavy 6-ply Merino wool and cashmere cable-knit sweater in classic cream ivory.",
           price: 320.00,
           category: "Knitwear & Shirts",
-          image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&auto=format&fit=crop&q=80",
+          image: "/uploads/product-1620799140408-edc6dcb6d633.jpg",
           images: [
-            "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80"
+            "/uploads/product-1620799140408-edc6dcb6d633.jpg",
+            "/uploads/product-1576566588028-4147f3842f27.jpg",
+            "/uploads/product-1618354691373-d851c5c3a990.jpg"
           ],
           stock: 28,
         },
@@ -176,11 +176,11 @@ connectDB().then(async () => {
           description: "Knitted from ultra-fine Mongolian cashmere with Mother-of-Pearl buttons and a ribbed collar.",
           price: 280.00,
           category: "Knitwear & Shirts",
-          image: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80",
+          image: "/uploads/product-1618354691373-d851c5c3a990.jpg",
           images: [
-            "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=800&auto=format&fit=crop&q=80"
+            "/uploads/product-1618354691373-d851c5c3a990.jpg",
+            "/uploads/product-1620799140408-edc6dcb6d633.jpg",
+            "/uploads/product-1598033129183-c4f50c736f10.jpg"
           ],
           stock: 22,
         },
@@ -189,11 +189,11 @@ connectDB().then(async () => {
           description: "Crisp button-down collar shirt crafted from rare Sea Island cotton with single-needle tailoring.",
           price: 185.00,
           category: "Knitwear & Shirts",
-          image: "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=800&auto=format&fit=crop&q=80",
+          image: "/uploads/product-1598033129183-c4f50c736f10.jpg",
           images: [
-            "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80"
+            "/uploads/product-1598033129183-c4f50c736f10.jpg",
+            "/uploads/product-1602810318383-e386cc2a3ccf.jpg",
+            "/uploads/product-1618354691373-d851c5c3a990.jpg"
           ],
           stock: 45,
         },
@@ -202,11 +202,11 @@ connectDB().then(async () => {
           description: "Breathable European flax linen with a camp collar, designed for relaxed coastal retreats and summer afternoons.",
           price: 165.00,
           category: "Knitwear & Shirts",
-          image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80",
+          image: "/uploads/product-1602810318383-e386cc2a3ccf.jpg",
           images: [
-            "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&auto=format&fit=crop&q=80"
+            "/uploads/product-1602810318383-e386cc2a3ccf.jpg",
+            "/uploads/product-1598033129183-c4f50c736f10.jpg",
+            "/uploads/product-1620799140408-edc6dcb6d633.jpg"
           ],
           stock: 35,
         },
@@ -217,11 +217,11 @@ connectDB().then(async () => {
           description: "Full-grain calfskin leather hand-stitched in Tuscany. Features oak bark-tanned leather soles and glove leather lining.",
           price: 420.00,
           category: "Leather Shoes",
-          image: "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=800&auto=format&fit=crop&q=80",
+          image: "/uploads/product-1533867617858-e7b97e060509.jpg",
           images: [
-            "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1582897103445-56545163b49c?w=800&auto=format&fit=crop&q=80"
+            "/uploads/product-1533867617858-e7b97e060509.jpg",
+            "/uploads/product-1614252235316-8c857d38b5f4.jpg",
+            "/uploads/product-1582897103445-56545163b49c.jpg"
           ],
           stock: 20,
         },
@@ -230,11 +230,11 @@ connectDB().then(async () => {
           description: "Closed-laced formal oxfords with subtle brogue detailing on the toe medallion. Hand-patinated to deep antique cognac.",
           price: 460.00,
           category: "Leather Shoes",
-          image: "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&auto=format&fit=crop&q=80",
+          image: "/uploads/product-1614252235316-8c857d38b5f4.jpg",
           images: [
-            "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=800&auto=format&fit=crop&q=80"
+            "/uploads/product-1614252235316-8c857d38b5f4.jpg",
+            "/uploads/product-1533867617858-e7b97e060509.jpg",
+            "/uploads/product-1608256246200-53e635b5b65f.jpg"
           ],
           stock: 18,
         },
@@ -243,11 +243,11 @@ connectDB().then(async () => {
           description: "Rich French calf suede treated with water resistance, finished with classic tassels and Goodyear construction.",
           price: 395.00,
           category: "Leather Shoes",
-          image: "https://images.unsplash.com/photo-1582897103445-56545163b49c?w=800&auto=format&fit=crop&q=80",
+          image: "/uploads/product-1582897103445-56545163b49c.jpg",
           images: [
-            "https://images.unsplash.com/photo-1582897103445-56545163b49c?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&auto=format&fit=crop&q=80"
+            "/uploads/product-1582897103445-56545163b49c.jpg",
+            "/uploads/product-1533867617858-e7b97e060509.jpg",
+            "/uploads/product-1614252235316-8c857d38b5f4.jpg"
           ],
           stock: 15,
         },
@@ -256,11 +256,11 @@ connectDB().then(async () => {
           description: "Sleek double brass buckle monk shoes handcrafted from Italian box calf with a bevelled waistline.",
           price: 440.00,
           category: "Leather Shoes",
-          image: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=800&auto=format&fit=crop&q=80",
+          image: "/uploads/product-1608256246200-53e635b5b65f.jpg",
           images: [
-            "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1582897103445-56545163b49c?w=800&auto=format&fit=crop&q=80"
+            "/uploads/product-1608256246200-53e635b5b65f.jpg",
+            "/uploads/product-1614252235316-8c857d38b5f4.jpg",
+            "/uploads/product-1582897103445-56545163b49c.jpg"
           ],
           stock: 14,
         },
@@ -271,11 +271,11 @@ connectDB().then(async () => {
           description: "Vegetable-tanned 32mm dress belt with beveled edge creasing and a solid brushed brass equestrian buckle.",
           price: 135.00,
           category: "Belts & Leather Goods",
-          image: "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=800&auto=format&fit=crop&q=80",
+          image: "/uploads/product-1624222247344-550fb60583dc.jpg",
           images: [
-            "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&auto=format&fit=crop&q=80"
+            "/uploads/product-1624222247344-550fb60583dc.jpg",
+            "/uploads/product-1553062407-98eeb64c6a62.jpg",
+            "/uploads/product-1627123424574-724758594e93.jpg"
           ],
           stock: 50,
         },
@@ -284,11 +284,11 @@ connectDB().then(async () => {
           description: "Hand-plaited supple calf leather with rich burnished edges and a polished English brass buckle.",
           price: 145.00,
           category: "Belts & Leather Goods",
-          image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80",
+          image: "/uploads/product-1553062407-98eeb64c6a62.jpg",
           images: [
-            "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&auto=format&fit=crop&q=80"
+            "/uploads/product-1553062407-98eeb64c6a62.jpg",
+            "/uploads/product-1624222247344-550fb60583dc.jpg",
+            "/uploads/product-1627123424574-724758594e93.jpg"
           ],
           stock: 35,
         },
@@ -297,11 +297,11 @@ connectDB().then(async () => {
           description: "Ultra-slim 6-pocket cardholder in deep British Racing Green, hand-buffed with natural beeswax.",
           price: 95.00,
           category: "Belts & Leather Goods",
-          image: "https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&auto=format&fit=crop&q=80",
+          image: "/uploads/product-1627123424574-724758594e93.jpg",
           images: [
-            "https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80"
+            "/uploads/product-1627123424574-724758594e93.jpg",
+            "/uploads/product-1624222247344-550fb60583dc.jpg",
+            "/uploads/product-1553062407-98eeb64c6a62.jpg"
           ],
           stock: 60,
         },
@@ -312,11 +312,11 @@ connectDB().then(async () => {
           description: "Hand-wound mechanical movement with ivory enamel dial, blued Breguet hands, and brown alligator leather strap.",
           price: 1250.00,
           category: "Fine Accessories",
-          image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&auto=format&fit=crop&q=80",
+          image: "/uploads/product-1522335789203-aabd1fc54bc9.jpg",
           images: [
-            "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=80"
+            "/uploads/product-1522335789203-aabd1fc54bc9.jpg",
+            "/uploads/product-1572635196237-14b3f281503f.jpg",
+            "/uploads/product-1596755094514-f87e34085b2c.jpg"
           ],
           stock: 8,
         },
@@ -325,11 +325,11 @@ connectDB().then(async () => {
           description: "Printed in Como, Italy on heavyweight 16-momme silk twill with artisan hand-rolled edges.",
           price: 85.00,
           category: "Fine Accessories",
-          image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=80",
+          image: "/uploads/product-1596755094514-f87e34085b2c.jpg",
           images: [
-            "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&auto=format&fit=crop&q=80"
+            "/uploads/product-1596755094514-f87e34085b2c.jpg",
+            "/uploads/product-1608231387042-66d1773070a5.jpg",
+            "/uploads/product-1522335789203-aabd1fc54bc9.jpg"
           ],
           stock: 40,
         },
@@ -338,11 +338,11 @@ connectDB().then(async () => {
           description: "Handmade Italian acetate frames with polarized mineral glass lenses and 24k gold-plated temple hardware.",
           price: 290.00,
           category: "Fine Accessories",
-          image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&auto=format&fit=crop&q=80",
+          image: "/uploads/product-1572635196237-14b3f281503f.jpg",
           images: [
-            "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=80"
+            "/uploads/product-1572635196237-14b3f281503f.jpg",
+            "/uploads/product-1522335789203-aabd1fc54bc9.jpg",
+            "/uploads/product-1596755094514-f87e34085b2c.jpg"
           ],
           stock: 30,
         },
@@ -351,11 +351,11 @@ connectDB().then(async () => {
           description: "Pure combed Mongolian cashmere woven on traditional looms with water-wave ripple finish and delicate fringe.",
           price: 195.00,
           category: "Fine Accessories",
-          image: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&auto=format&fit=crop&q=80",
+          image: "/uploads/product-1608231387042-66d1773070a5.jpg",
           images: [
-            "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&auto=format&fit=crop&q=80"
+            "/uploads/product-1608231387042-66d1773070a5.jpg",
+            "/uploads/product-1596755094514-f87e34085b2c.jpg",
+            "/uploads/product-1572635196237-14b3f281503f.jpg"
           ],
           stock: 25,
         },
