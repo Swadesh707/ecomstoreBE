@@ -32,6 +32,7 @@ app.use(
   cors({
     origin: true,
     credentials: true,
+    maxAge: 86400,
   })
 )
 
@@ -40,7 +41,13 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true })
 }
 
-app.use("/uploads", express.static(uploadDir))
+app.use(
+  "/uploads",
+  express.static(uploadDir, {
+    maxAge: "7d",
+    immutable: true,
+  })
+)
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
