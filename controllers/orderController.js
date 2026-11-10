@@ -94,7 +94,6 @@ export const createOrder = async (req, res) => {
     const trackingNumber = req.body.trackingNumber ? String(req.body.trackingNumber).trim() : ""
     const transactionId = `TXN-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`
 
-    // Determine patron User ID link & verify consumer status
     let assignedUserId = null
     let consumerAccountStatus = "Active"
     const candidateUser = req.user?.id || req.body.userId || req.body.user
@@ -118,7 +117,6 @@ export const createOrder = async (req, res) => {
       }
     }
 
-    // Process Line Items
     const processedItems = []
     for (const item of items) {
       let validProductId = null
@@ -143,7 +141,6 @@ export const createOrder = async (req, res) => {
       })
     }
 
-    // Create clean, flat Order in MongoDB
     const newOrder = await Order.create({
       orderNumber,
       trackingNumber,
@@ -177,7 +174,6 @@ export const createOrder = async (req, res) => {
       lastFourDigits,
     })
 
-    // Create clean, flat Payment Document in MongoDB
     try {
       await Payment.create({
         transactionId,
@@ -196,7 +192,6 @@ export const createOrder = async (req, res) => {
       console.error("Payment document recording notice:", payErr)
     }
 
-    // Decrement stock accurately for products in database
     for (const item of processedItems) {
       try {
         if (item.productId) {
@@ -219,7 +214,6 @@ export const createOrder = async (req, res) => {
       }
     }
 
-    // If coupon was applied, record usage
     if (couponCode) {
       try {
         await Coupon.findOneAndUpdate(
@@ -345,7 +339,6 @@ export const createInStoreBill = async (req, res) => {
       estimatedDeliveryDate: new Date(),
     })
 
-    // Decrement stock for inventory items sold
     for (const item of processedItems) {
       try {
         let prod = null
@@ -399,7 +392,6 @@ export const updateOrderStatus = async (req, res) => {
     if (carrier) order.carrier = carrier
     if (estimatedDeliveryDate) order.estimatedDeliveryDate = estimatedDeliveryDate
 
-    // If order is cancelled, return items back to stock
     if (orderStatus === "Cancelled" && !order.stockRestored) {
       for (const item of order.items) {
         if (item.productId) {
@@ -481,7 +473,6 @@ export const updateReturnStatus = async (req, res) => {
 
     order.returnStatus = returnStatus || order.returnStatus
 
-    // If return is approved or completed, refund payment and restore stock
     if (returnStatus === "Approved" || returnStatus === "Refunded" || returnStatus === "Completed") {
       order.paymentStatus = "Refunded"
       if (!order.stockRestored) {
@@ -570,7 +561,6 @@ export const getAnalyticsSummary = async (req, res) => {
       totalShippingCollected += order.shippingFee || 0
       totalDiscountGiven += order.discountAmount || 0
 
-      // Monthly / Date grouping
       const dateKey = new Date(order.createdAt).toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
@@ -581,7 +571,6 @@ export const getAnalyticsSummary = async (req, res) => {
       monthlySalesMap[dateKey].revenue += order.totalAmount || 0
       monthlySalesMap[dateKey].orders += 1
 
-      // Item metrics
       for (const item of order.items || []) {
         const title = item.title || "Unknown Article"
         if (!productSalesMap[title]) {
@@ -597,24 +586,19 @@ export const getAnalyticsSummary = async (req, res) => {
       }
     }
 
-    // Estimate Logistics Costs:
     const courierOperatingCostPerOrder = 14.5
     const totalLogisticsCost = orders.length * courierOperatingCostPerOrder
 
-    // Estimate Product Costs (COGS):
     const totalProductCost = Math.round(totalRevenue * 0.42 * 100) / 100
 
-    // Profit Calculations
     const grossProfit = Math.round((totalRevenue - totalProductCost) * 100) / 100
     const netProfit = Math.round((grossProfit - totalLogisticsCost) * 100) / 100
     const profitMargin = totalRevenue > 0 ? Math.round((netProfit / totalRevenue) * 1000) / 10 : 0
 
-    // Trending Products
     const trendingProducts = Object.values(productSalesMap)
       .sort((a, b) => b.quantity - a.quantity)
       .slice(0, 5)
 
-    // Wishlist Demand Aggregation
     const allWishlists = await Wishlist.find().populate("items.productId")
     const wishlistDemandMap = {}
 
@@ -642,7 +626,6 @@ export const getAnalyticsSummary = async (req, res) => {
       .sort((a, b) => b.wishlistCount - a.wishlistCount)
       .slice(0, 5)
 
-    // Category Sales Distribution
     const productsInDb = await Product.find({}, "title category")
     const productCatMap = {}
     for (const p of productsInDb) {
@@ -663,7 +646,6 @@ export const getAnalyticsSummary = async (req, res) => {
       share: totalRevenue > 0 ? Math.round((revenue / totalRevenue) * 100) : 0,
     }))
 
-    // Format monthly trend array (last 7 data points)
     const monthlyTrend = Object.values(monthlySalesMap).slice(-7)
     if (monthlyTrend.length === 0) {
       const today = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" })
@@ -713,7 +695,6 @@ export const updateInStoreBill = async (req, res) => {
       discountAmount = 0,
     } = req.body
 
-    // 1. Restore previous stock for items in this bill
     for (const oldItem of order.items) {
       try {
         let prod = null
@@ -732,7 +713,6 @@ export const updateInStoreBill = async (req, res) => {
       }
     }
 
-    // 2. Prepare new processed items
     let processedItems = []
     let subtotal = 0
 
@@ -777,7 +757,6 @@ export const updateInStoreBill = async (req, res) => {
       : Number(discountAmount) || 0
     const totalAmount = Math.max(0, subtotal - calculatedDiscount)
 
-    // 3. Decrement new stock
     for (const newItem of processedItems) {
       try {
         let prod = null
@@ -797,7 +776,6 @@ export const updateInStoreBill = async (req, res) => {
       }
     }
 
-    // 4. Update order fields
     if (customerName) order.customer.name = customerName.trim()
     if (customerEmail) order.customer.email = customerEmail.trim()
     order.items = processedItems
@@ -822,7 +800,6 @@ export const deleteInStoreBill = async (req, res) => {
       return res.status(404).json({ message: "Bill not found" })
     }
 
-    // Restore stock for all items
     for (const item of order.items) {
       try {
         let prod = null

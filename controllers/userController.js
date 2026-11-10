@@ -2,6 +2,7 @@ import User from "../model/user.js"
 import Wishlist from "../model/Wishlist.js"
 import Product from "../model/Product.js"
 import UserCategory, { DEFAULT_USER_CATEGORIES } from "../model/UserCategory.js"
+import { sendOtpEmail } from "../services/emailService.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
@@ -37,7 +38,6 @@ export const createUser = async (req, res) => {
     const password = req.body.password
     const emailfrombody = req.body.email
 
-    // Public signup is strictly a customer patron ('user')
     const role = "user"
 
     if (!emailfrombody || !password) {
@@ -105,7 +105,6 @@ export const createStaffUser = async (req, res) => {
       return res.status(400).json({ message: `An account with email "${cleanEmail}" already exists.` })
     }
 
-    // Resolve role and category directly from database UserCategory collection
     const dbCategories = await UserCategory.find()
     const availableRoles = [
       ...new Set([
@@ -204,7 +203,6 @@ export const claimAdmin = async (req, res) => {
     res.status(500).json({ message: "Failed to promote account." })
   }
 }
-
 
 export const login = async (req, res) => {
   try {
@@ -556,11 +554,153 @@ export const deleteUser = async (req, res) => {
     if (!deleted) {
       return res.status(404).json({ message: "Account not found." })
     }
-    // Also remove their wishlist from database
     await Wishlist.deleteMany({ userId: id })
     res.json({ message: "Account removed successfully." })
   } catch (err) {
     console.error("Error deleting user:", err)
     res.status(500).json({ message: "Failed to remove user account." })
+  }
+}
+
+const forgotPasswordRateLimits = new Map()
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const clientIp = req.ip || req.headers["x-forwarded-for"] || "unknown"
+    const now = Date.now()
+    const record = forgotPasswordRateLimits.get(clientIp) || { count: 0, resetTime: now + 15 * 60 * 1000 }
+
+    if (now > record.resetTime) {
+      record.count = 0
+      record.resetTime = now + 15 * 60 * 1000
+    }
+
+    if (record.count >= 5) {
+      return res.status(429).json({
+        message: "Too many reset requests from this network. Please wait 15 minutes before retrying.",
+      })
+    }
+
+    const { email } = req.body
+    if (!email || !email.trim()) {
+      return res.status(400).json({ message: "Please provide a valid email address." })
+    }
+
+    const cleanEmail = email.toLowerCase().trim()
+    const user = await User.findOne({ email: cleanEmail })
+
+    record.count += 1
+    forgotPasswordRateLimits.set(clientIp, record)
+
+    if (!user) {
+
+      return res.json({
+        message: "If an account matches that email address, a 6-digit verification code has been dispatched.",
+      })
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString()
+    user.resetOtp = otp
+    user.resetOtpExpiry = new Date(Date.now() + 10 * 60 * 1000)
+    user.failedOtpAttempts = 0
+    await user.save()
+
+    try {
+      await sendOtpEmail(user.email, otp)
+    } catch (emailErr) {
+      console.error("Mailtrap dispatch error:", emailErr)
+      return res.status(500).json({ message: "Failed to dispatch verification email. Please try again." })
+    }
+
+    return res.json({
+      message: "If an account matches that email address, a 6-digit verification code has been dispatched.",
+    })
+  } catch (err) {
+    console.error("Forgot password error:", err)
+    return res.status(500).json({ message: "Server encountered an error processing your request." })
+  }
+}
+
+export const verifyOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body
+    if (!email || !otp) {
+      return res.status(400).json({ message: "Email and verification code are required." })
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() })
+    if (!user || !user.resetOtp || !user.resetOtpExpiry) {
+      return res.status(400).json({ message: "Invalid or expired verification session." })
+    }
+
+    if (new Date() > new Date(user.resetOtpExpiry)) {
+      user.resetOtp = null
+      user.resetOtpExpiry = null
+      await user.save()
+      return res.status(400).json({ message: "Verification code has expired. Please request a new code." })
+    }
+
+    if (user.failedOtpAttempts >= 5) {
+      user.resetOtp = null
+      user.resetOtpExpiry = null
+      await user.save()
+      return res.status(400).json({
+        message: "Too many failed attempts. Code has been invalidated for security. Please request a new one.",
+      })
+    }
+
+    if (user.resetOtp !== String(otp).trim()) {
+      user.failedOtpAttempts = (user.failedOtpAttempts || 0) + 1
+      await user.save()
+      return res.status(400).json({
+        message: `Incorrect verification code. ${5 - user.failedOtpAttempts} attempts remaining.`,
+      })
+    }
+
+    return res.json({ success: true, message: "Verification code confirmed." })
+  } catch (err) {
+    console.error("Verify OTP error:", err)
+    return res.status(500).json({ message: "Failed to verify code." })
+  }
+}
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body
+    if (!email || !otp || !newPassword) {
+      return res.status(400).json({ message: "All fields are required to reset your password." })
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters in length." })
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() })
+    if (!user || !user.resetOtp || !user.resetOtpExpiry) {
+      return res.status(400).json({ message: "Invalid or expired verification session." })
+    }
+
+    if (new Date() > new Date(user.resetOtpExpiry)) {
+      return res.status(400).json({ message: "Verification code has expired. Please request a new code." })
+    }
+
+    if (user.resetOtp !== String(otp).trim()) {
+      return res.status(400).json({ message: "Invalid verification code." })
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword.trim(), 10)
+    user.password = hashedPassword
+    user.resetOtp = null
+    user.resetOtpExpiry = null
+    user.failedOtpAttempts = 0
+    await user.save()
+
+    return res.json({
+      success: true,
+      message: "Your password has been successfully reset. Please sign in with your new credentials.",
+    })
+  } catch (err) {
+    console.error("Reset password error:", err)
+    return res.status(500).json({ message: "Failed to reset password. Please try again." })
   }
 }

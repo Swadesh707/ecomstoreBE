@@ -11,6 +11,9 @@ import {
   getUserCategories,
   updateUserRole,
   deleteUser,
+  forgotPassword,
+  verifyOtp,
+  resetPassword,
 } from "../controllers/userController.js"
 import { verifyToken, optionalAuth, requireAdmin } from "../middlewares/authMiddleware.js"
 
@@ -23,6 +26,9 @@ router.post("/create", createUser)
 router.post("/create-staff", verifyToken, requireAdmin, createStaffUser)
 router.post("/claim-admin", optionalAuth, claimAdmin)
 router.post("/login", login)
+router.post("/forgot-password", forgotPassword)
+router.post("/verify-otp", verifyOtp)
+router.post("/reset-password", resetPassword)
 
 router.get("/all", verifyToken, requireAdmin, getAllUsers)
 router.get("/", verifyToken, requireAdmin, getAllUsers)

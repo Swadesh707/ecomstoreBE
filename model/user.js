@@ -60,6 +60,18 @@ const userSchema = new Schema(
       type: String,
       default: "",
     },
+    resetOtp: {
+      type: String,
+      default: null,
+    },
+    resetOtpExpiry: {
+      type: Date,
+      default: null,
+    },
+    failedOtpAttempts: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 )

@@ -19,7 +19,7 @@ export const verifyToken = async(req,res,next)=> {
              message : 'Token is invalid or expired'
          })
      }
-     
+
      req.user = decoded
      next()
    }
@@ -43,7 +43,7 @@ export const optionalAuth = async (req, res, next) => {
       }
     }
   } catch (err) {
-    // Continue without token if invalid
+
   }
   next()
 }

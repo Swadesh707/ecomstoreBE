@@ -2,9 +2,6 @@ import CollectedMails from "../model/CollectedMails.js"
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-// @desc    Subscribe / collect an email from storefront
-// @route   POST /collected-mails
-// @access  Public
 export const subscribeMail = async (req, res) => {
   try {
     const rawEmail = req.body?.email || ""
@@ -24,7 +21,6 @@ export const subscribeMail = async (req, res) => {
       })
     }
 
-    // Check if already subscribed
     const existing = await CollectedMails.findOne({ email })
     if (existing) {
       return res.status(200).json({
@@ -44,7 +40,7 @@ export const subscribeMail = async (req, res) => {
       id: newMail._id,
     })
   } catch (err) {
-    // Handle duplicate key error gracefully
+
     if (err.code === 11000) {
       return res.status(200).json({
         success: true,
@@ -60,14 +56,10 @@ export const subscribeMail = async (req, res) => {
   }
 }
 
-// @desc    Get all collected emails
-// @route   GET /collected-mails
-// @access  Private (Admin only)
 export const getAllCollectedMails = async (req, res) => {
   try {
     const mails = await CollectedMails.find({}).sort({ createdAt: -1 }).lean()
 
-    // Map to clean format
     const formatted = mails.map((m) => ({
       _id: m._id,
       email: m.email,
@@ -88,9 +80,6 @@ export const getAllCollectedMails = async (req, res) => {
   }
 }
 
-// @desc    Delete a collected email
-// @route   DELETE /collected-mails/:id
-// @access  Private (Admin only)
 export const deleteCollectedMail = async (req, res) => {
   try {
     const { id } = req.params

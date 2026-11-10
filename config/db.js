@@ -26,7 +26,7 @@ export const connectDB = async () => {
       })
       return fallback
     } catch {
-      // Retain buffer
+
     }
   }
 }

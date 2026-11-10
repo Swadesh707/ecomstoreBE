@@ -35,16 +35,13 @@ app.use(
   })
 )
 
-// Create uploads directory if it does not exist
 const uploadDir = path.join(process.cwd(), "uploads")
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true })
 }
 
-// Serve uploaded static files
 app.use("/uploads", express.static(uploadDir))
 
-// Multer storage configuration for device image uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, uploadDir)
@@ -58,10 +55,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  limits: { fileSize: 10 * 1024 * 1024 },
 })
 
-// Device image upload endpoint (single and multiple)
 app.post("/upload", upload.single("image"), (req, res) => {
   try {
     if (!req.file) {
@@ -103,7 +99,7 @@ connectDB().then(async () => {
       }
 
       await Product.insertMany([
-        // Tailoring & Outerwear
+
         {
           title: "Bespoke Double-Breasted Cashmere Overcoat",
           description: "Meticulously hand-cut from 100% pure Scottish cashmere. Featuring peak lapels, horn buttons, and a structured sartorial silhouette.",
@@ -157,7 +153,6 @@ connectDB().then(async () => {
           stock: 25,
         },
 
-        // Knitwear & Shirts
         {
           title: "Chunky Cable-Knit Fisherman Sweater",
           description: "Sumptuously heavy 6-ply Merino wool and cashmere cable-knit sweater in classic cream ivory.",
@@ -211,7 +206,6 @@ connectDB().then(async () => {
           stock: 35,
         },
 
-        // Leather Shoes
         {
           title: "Goodyear-Welted Penny Loafers",
           description: "Full-grain calfskin leather hand-stitched in Tuscany. Features oak bark-tanned leather soles and glove leather lining.",
@@ -265,7 +259,6 @@ connectDB().then(async () => {
           stock: 14,
         },
 
-        // Belts & Leather Goods
         {
           title: "Full-Grain Italian Saddle Leather Belt",
           description: "Vegetable-tanned 32mm dress belt with beveled edge creasing and a solid brushed brass equestrian buckle.",
@@ -306,7 +299,6 @@ connectDB().then(async () => {
           stock: 60,
         },
 
-        // Fine Accessories
         {
           title: "Vintage Mechanical Chronometer Dress Watch",
           description: "Hand-wound mechanical movement with ivory enamel dial, blued Breguet hands, and brown alligator leather strap.",
@@ -390,13 +382,11 @@ connectDB().then(async () => {
       })
     }
 
-    // Seed default user categories if empty
     const userCatCount = await UserCategory.countDocuments()
     if (userCatCount === 0) {
       await UserCategory.insertMany(DEFAULT_USER_CATEGORIES)
     }
 
-    // Seed default accounts for each category
     const defaultAccounts = [
       {
         fullName: "admin",
@@ -446,14 +436,14 @@ connectDB().then(async () => {
         await existing.save()
       }
     }
-    // Drop unique index on trackingNumber if it existed previously
+
     try {
       await Order.collection.dropIndex("trackingNumber_1")
     } catch (e) {
-      // Index might not exist or already dropped
+
     }
   } catch (err) {
-    // Quiet
+
   }
 
   const PORT = process.env.PORT || 8000

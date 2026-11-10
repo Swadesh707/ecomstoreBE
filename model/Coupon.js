@@ -30,7 +30,7 @@ const couponSchema = new mongoose.Schema(
     },
     maxUses: {
       type: Number,
-      default: null, // null means unlimited uses
+      default: null,
     },
     usedCount: {
       type: Number,
@@ -38,7 +38,7 @@ const couponSchema = new mongoose.Schema(
     },
     limitPerUser: {
       type: Number,
-      default: 1, // default 1 use per account/email
+      default: 1,
     },
     usedBy: [
       {
