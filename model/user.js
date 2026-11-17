@@ -38,7 +38,7 @@ const userSchema = new Schema(
     },
     phone: {
       type: String,
-      default: "",
+      default: "+977",
     },
     address: {
       type: String,
@@ -54,7 +54,6 @@ const userSchema = new Schema(
     },
     country: {
       type: String,
-      default: "United States",
     },
     image: {
       type: String,
