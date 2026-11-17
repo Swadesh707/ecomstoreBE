@@ -145,7 +145,8 @@ export const createOrder = async (req, res) => {
       orderNumber,
       trackingNumber,
       invoiceNumber,
-      soldBy: req.body.soldBy || (req.user?.name || ""),
+      soldBy: "",
+      orderType: "online",
       user: assignedUserId,
       customer: {
         name: customer.name.trim(),
@@ -319,6 +320,7 @@ export const createInStoreBill = async (req, res) => {
       invoiceNumber,
       trackingNumber: "",
       soldBy: activeSoldBy,
+      orderType: "in-store",
       customer: {
         name: custName,
         email: custEmail,

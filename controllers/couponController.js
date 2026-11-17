@@ -140,7 +140,7 @@ export const validateCoupon = async (req, res) => {
     const numericSubtotal = Number(subtotal) || 0
     if (coupon.minOrderAmount && numericSubtotal < coupon.minOrderAmount) {
       return res.status(400).json({
-        message: `Order subtotal must be at least $${coupon.minOrderAmount.toFixed(
+        message: `Order subtotal must be at least Rs. ${coupon.minOrderAmount.toFixed(
           2
         )} to apply this coupon.`,
       })

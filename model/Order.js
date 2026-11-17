@@ -20,6 +20,11 @@ const orderSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    orderType: {
+      type: String,
+      enum: ["online", "in-store"],
+      default: "online",
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
